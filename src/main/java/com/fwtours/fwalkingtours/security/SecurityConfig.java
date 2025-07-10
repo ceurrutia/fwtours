@@ -36,8 +36,17 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/usuarios/login", "/api/usuarios/register").permitAll()
-                        .requestMatchers("/api/empresas/**").authenticated()
+                        .requestMatchers(
+                                "/api/usuarios/login",
+                                "/api/usuarios/register",
+                                "/api/empresas/*/tours", //GET tours por empresa
+                                "/api/tours/**"
+                        ).permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/api/reservas").hasRole("CLIENTE")
+
+                        .requestMatchers("/api/empresas/**").hasRole("EMPRESA")
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
