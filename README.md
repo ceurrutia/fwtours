@@ -1,6 +1,6 @@
 # Free Walking Tours
 
-Aplicación web para la gestión de tours guiados a pie. Permite el registro y autenticación de usuarios con roles diferenciados: **cliente**, **empresa** y **administrador**. Las empresas pueden crear, modificar y eliminar sus tours, mientras que los clientes pueden visualizar la oferta de tours disponibles.
+Aplicación web para la gestión de tours guiados a pie. Permite el registro y autenticación de usuarios con roles diferenciados: **cliente**, **empresa** y **administrador**. Las empresas pueden crear, modificar y eliminar sus tours, pero no pueden eliminar su usuario,  los clientes pueden visualizar la oferta de tours disponibles y efectuar uan reserva, tambien puede eliminar su usuario, el administrador puede crear, modificar y eliminar usuarios, clientes y empresas.
 
 ## Tecnologías utilizadas
 
