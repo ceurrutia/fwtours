@@ -3,6 +3,7 @@ package com.fwtours.fwalkingtours.controllers;
 import com.fwtours.fwalkingtours.dto.EmpresaDTO;
 import com.fwtours.fwalkingtours.services.EmpresaService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class EmpresaController {
     }
 
     //get a la lista
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<EmpresaDTO>> listarEmpresas() {
         return ResponseEntity.ok(empresaService.listarEmpresas());

@@ -28,6 +28,13 @@ public class EmpresaService {
         return empresas.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
+    //buscar por email de usuario
+    public Optional<Empresa> findByEmailUsuario(String email) {
+        return empresaRepository.findAll().stream()
+                .filter(e -> e.getUsuario().getEmail().equals(email))
+                .findFirst();
+    }
+
     //buscar por empresa
     public Optional<Empresa> findByUsuarioId(Long usuarioId) {
         return empresaRepository.findAll().stream()
@@ -48,6 +55,7 @@ public class EmpresaService {
                 .orElseThrow(() -> new Exception("Empresa no encontrada para el usuario " + usuarioId));
 
         if (dto.getNombreEmpresa() != null) empresa.setNombreEmpresa(dto.getNombreEmpresa());
+        if (dto.getCuit() != null) empresa.setCuit(dto.getCuit());
         if (dto.getDescripcion() != null) empresa.setDescripcion(dto.getDescripcion());
         if (dto.getDireccion() != null) empresa.setDireccion(dto.getDireccion());
         if (dto.getTelefono() != null) empresa.setTelefono(dto.getTelefono());
@@ -60,9 +68,11 @@ public class EmpresaService {
         return new EmpresaDTO(
                 empresa.getId(),
                 empresa.getNombreEmpresa(),
+                empresa.getCuit(),
                 empresa.getDescripcion(),
                 empresa.getDireccion(),
                 empresa.getTelefono(),
+                empresa.getActiva(),
                 empresa.getUsuario().getId()
         );
     }

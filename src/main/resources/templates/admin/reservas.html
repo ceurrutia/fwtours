@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Administrar Reservas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: myHeader}"></div>
+
+<div class="container">
+  <h2 class="mb-4">Listado de Reservas</h2>
+
+  <table class="table table-bordered table-striped table-hover">
+    <thead class="table-ligth">
+    <tr>
+      <th>Nombre del Tour</th>
+      <th>Nombre de la Empresa</th>
+      <th>Email del Usuario</th>
+      <th>Fecha de Reserva</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="reserva : ${reservas}">
+      <td th:text="${reserva.nombreTour}">Nombre del Tour</td>
+      <td th:text="${reserva.nombreEmpresa}">Nombre de la Empresa</td>
+      <td th:text="${reserva.emailCliente}">Email del Usuario</td>
+      <td th:text="${#temporals.format(reserva.fechaReserva, 'dd/MM/yyyy')}">Fecha</td>
+      <td>
+        <a th:href="@{'/admin/reservas/eliminar/' + ${reserva.id}}" class="btn btn-danger btn-sm">Eliminar</a>
+      </td>
+    </tr>
+    <tr th:if="${reservas.empty}">
+      <td colspan="5" class="text-center text-muted">No hay reservas registradas.</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

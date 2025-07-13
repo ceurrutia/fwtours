@@ -31,7 +31,6 @@ public class UsuarioController {
     }
 
     //get a la lista de usuarios
-
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listarUsuarios() {
         return ResponseEntity.ok(usuarioService.listarUsuarios());
@@ -113,9 +112,8 @@ public class UsuarioController {
     }
 
 
-    //delete de usuario (SOLO ADMIN)
+    //delete de usuario
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> eliminarUsuario(@PathVariable Long id) {
         try {
             usuarioService.eliminarUsuario(id);

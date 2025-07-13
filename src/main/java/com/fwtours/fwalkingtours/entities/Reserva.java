@@ -10,10 +10,10 @@ public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Tour tour;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Usuario cliente;
 
     private LocalDate fechaReserva;

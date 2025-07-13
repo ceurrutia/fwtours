@@ -36,22 +36,53 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/usuarios/login",
-                                "/api/usuarios/register",
-                                "/api/empresas/*/tours", //GET tours por empresa
-                                "/api/tours/**"
-                        ).permitAll()
+                        .requestMatchers("/api/usuarios/login", "/login", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/api/tours", "/tours").permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/api/reservas").hasRole("CLIENTE")
+                        // EMPRESA
+                        .requestMatchers("/empresa/**").hasRole("EMPRESA")
+                        .requestMatchers(HttpMethod.POST, "/api/empresas/*/tours").hasRole("EMPRESA")
+                        .requestMatchers(HttpMethod.PUT, "/api/empresas/*/tours/*").hasRole("EMPRESA")
+                        .requestMatchers(HttpMethod.DELETE, "/api/empresas/*/tours/*").hasRole("EMPRESA")
 
-                        .requestMatchers("/api/empresas/**").hasRole("EMPRESA")
+                        // ADMIN
+                        .requestMatchers("/admin/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/empresas/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/reservas/**").hasAnyRole("ADMIN", "EMPRESA", "CLIENTE")
 
+                        // Cualquier otro request necesita estar autenticado
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .httpBasic(withDefaults())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Opcional si usás JWT
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .failureUrl("/login?error=true")
+                        .permitAll()
+                        .successHandler((request, response, authentication) -> {
+                            // Aquí chequeamos roles y redirigimos
+                            boolean isAdmin = authentication.getAuthorities().stream()
+                                    .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+                            boolean isEmpresa = authentication.getAuthorities().stream()
+                                    .anyMatch(r -> r.getAuthority().equals("ROLE_EMPRESA"));
+                            boolean isCliente = authentication.getAuthorities().stream()
+                                    .anyMatch(r -> r.getAuthority().equals("ROLE_CLIENTE"));
+
+                            if (isAdmin) {
+                                response.sendRedirect("/admin/usuarios");
+                            } else if (isEmpresa) {
+                                response.sendRedirect("/empresa/reservas");
+                            } else if (isCliente) {
+                                response.sendRedirect("/cliente/reservas");
+                            } else {
+                                response.sendRedirect("/login?error=true");
+                            }
+                        })
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
         return http.build();
     }

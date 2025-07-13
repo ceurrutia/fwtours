@@ -1,6 +1,7 @@
 package com.fwtours.fwalkingtours.services;
 
 import com.fwtours.fwalkingtours.dto.ReservaDTO;
+import com.fwtours.fwalkingtours.entities.Empresa;
 import com.fwtours.fwalkingtours.entities.Reserva;
 import com.fwtours.fwalkingtours.entities.Tour;
 import com.fwtours.fwalkingtours.entities.Usuario;
@@ -10,6 +11,7 @@ import com.fwtours.fwalkingtours.repositories.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,13 +19,15 @@ public class ReservaService {
     private final ReservaRepository reservaRepository;
     private final TourRepository tourRepository;
     private final UsuarioRepository usuarioRepository;
+    private final EmpresaService empresaService;
 
     public ReservaService(ReservaRepository reservaRepository,
                           TourRepository tourRepository,
-                          UsuarioRepository usuarioRepository) {
+                          UsuarioRepository usuarioRepository, EmpresaService empresaService) {
         this.reservaRepository = reservaRepository;
         this.tourRepository = tourRepository;
         this.usuarioRepository = usuarioRepository;
+        this.empresaService = empresaService;
     }
 
 
@@ -51,6 +55,27 @@ public class ReservaService {
                 .collect(Collectors.toList());
     }
 
+    public List<ReservaDTO> obtenerReservasDeEmpresa(String emailUsuario) {
+        Optional<Empresa> empresaOpt = empresaService.findByEmailUsuario(emailUsuario);
+
+        if (empresaOpt.isEmpty()) {
+            return List.of();
+        }
+
+        Empresa empresa = empresaOpt.get();
+
+        return reservaRepository.findAll().stream()
+                .filter(r -> r.getTour() != null && r.getTour().getEmpresa() != null)
+                .filter(r -> r.getTour().getEmpresa().getId().equals(empresa.getId()))
+                .map(ReservaDTO::fromEntity)
+                .toList();
+    }
+
+    //reservas de cda cliente
+    public List<Reserva> obtenerReservasPorCliente(Usuario cliente) {
+        return reservaRepository.findByCliente(cliente);
+    }
+
     //listar reservas por tour
     public List<ReservaDTO> listarReservasPorTour(Long tourId) {
         List<Reserva> reservas = reservaRepository.findByTourId(tourId);
@@ -59,7 +84,7 @@ public class ReservaService {
 
     //listar todas las reservas
     public List<ReservaDTO> listarReservas() {
-        return reservaRepository.findAll()
+        return reservaRepository.findAllConRelaciones()
                 .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
@@ -74,12 +99,25 @@ public class ReservaService {
 
     // Mapear entidad a DTO
     private ReservaDTO mapToDTO(Reserva reserva) {
-        return new ReservaDTO(
-                reserva.getId(),
-                reserva.getTour().getId(),
-                reserva.getCliente().getId(),
-                reserva.getFechaReserva()
-        );
+        ReservaDTO dto = new ReservaDTO();
+        dto.setId(reserva.getId());
+        dto.setFechaReserva(reserva.getFechaReserva());
+
+        if (reserva.getTour() != null) {
+            dto.setTourId(reserva.getTour().getId());
+            dto.setNombreTour(reserva.getTour().getNombreTour());
+
+            if (reserva.getTour().getEmpresa() != null) {
+                dto.setNombreEmpresa(reserva.getTour().getEmpresa().getNombreEmpresa());
+            }
+        }
+
+        if (reserva.getCliente() != null) {
+            dto.setClienteId(reserva.getCliente().getId());
+            dto.setEmailCliente(reserva.getCliente().getEmail());
+        }
+
+        return dto;
     }
 
 }

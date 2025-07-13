@@ -31,6 +31,8 @@ public class TourService {
         tour.setPuntoEncuentro(dto.getPuntoEncuentro());
         tour.setDuracion(dto.getDuracion());
         tour.setFecha(dto.getFecha());
+        tour.setHora(dto.getHora());
+        tour.setIdioma(dto.getIdioma());
         tour.setCiudad(dto.getCiudad());
         tour.setPais(dto.getPais());
         tour.setDonacionSugerida(dto.getDonacionSugerida());
@@ -66,6 +68,8 @@ public class TourService {
         if (dto.getPuntoEncuentro() != null) tour.setPuntoEncuentro(dto.getPuntoEncuentro());
         if (dto.getDuracion() != null) tour.setDuracion(dto.getDuracion());
         if (dto.getFecha() != null) tour.setFecha(dto.getFecha());
+        if (dto.getHora() != null) tour.setHora(dto.getHora());
+        if (dto.getIdioma() != null) tour.setIdioma(dto.getIdioma());
         if (dto.getCiudad() != null) tour.setCiudad(dto.getCiudad());
         if (dto.getPais() != null) tour.setPais(dto.getPais());
         if (dto.getDonacionSugerida() != null) tour.setDonacionSugerida(dto.getDonacionSugerida());
@@ -87,5 +91,11 @@ public class TourService {
         }
 
         tourRepository.delete(tour);
+    }
+
+    // Listar todos los tours que haya
+    public List<TourDTO> listarTodos() {
+        List<Tour> tours = tourRepository.findAll();
+        return tours.stream().map(TourDTO::fromEntity).collect(Collectors.toList());
     }
 }

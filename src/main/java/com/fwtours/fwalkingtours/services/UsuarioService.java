@@ -54,7 +54,7 @@ public class UsuarioService {
 
         usuario = usuarioRepository.save(usuario);
 
-        //ojo si rolEMPR ESA, crea entidad Empresa
+        //crea entidad Empresa
         if (usuario.getRol() == Rol.EMPRESA) {
             Empresa empresa = new Empresa();
             empresa.setUsuario(usuario);
@@ -93,7 +93,7 @@ public class UsuarioService {
         );
     }
 
-    //eliminar usuario solo admines
+    //eliminar usuario
     public void eliminarUsuario(Long id) throws Exception {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new Exception("Usuario no encontrado con id " + id));
@@ -126,7 +126,7 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new Exception("Usuario no encontrado con id " + id));
 
-        // Actualizar nombreCompleto directamente
+        // Actualiza nombreCompleto directamente
         usuario.setNombreCompleto(dto.getNombreCompleto());
 
         usuario.setEmail(dto.getEmail());
@@ -135,9 +135,10 @@ public class UsuarioService {
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
             usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
-
-        usuario.setRol(dto.getRol());
-
+        // Solo actualiza rol si dto trae rol no nulo, sino conserva el actual
+        if (dto.getRol() != null) {
+            usuario.setRol(dto.getRol());
+        }
         Usuario guardado = usuarioRepository.save(usuario);
         return mapToDTO(guardado);
     }

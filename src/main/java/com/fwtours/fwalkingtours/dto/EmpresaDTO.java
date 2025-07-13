@@ -4,21 +4,25 @@ package com.fwtours.fwalkingtours.dto;
 public class EmpresaDTO {
     private Long id;
     private String nombreEmpresa;
+    private String cuit;
     private String descripcion;
     private String direccion;
     private String telefono;
+    private boolean activa;
     private Long usuarioId;
 
     public EmpresaDTO() {
     }
 
-    public EmpresaDTO(Long id, String nombreEmpresa, String descripcion,
-                      String direccion, String telefono, Long usuarioId) {
+    public EmpresaDTO(Long id, String nombreEmpresa, String cuit, String descripcion,
+                      String direccion, String telefono, Boolean activa, Long usuarioId) {
         this.id = id;
         this.nombreEmpresa = nombreEmpresa;
+        this.cuit = cuit;
         this.descripcion = descripcion;
         this.direccion = direccion;
         this.telefono = telefono;
+        this.activa = activa;
         this.usuarioId = usuarioId;
     }
 
@@ -38,6 +42,14 @@ public class EmpresaDTO {
 
     public void setNombreEmpresa(String nombreEmpresa) {
         this.nombreEmpresa = nombreEmpresa;
+    }
+
+    public String getCuit() {
+        return cuit;
+    }
+
+    public void setCuit(String cuit) {
+        this.cuit = cuit;
     }
 
     public String getDescripcion() {
@@ -62,6 +74,14 @@ public class EmpresaDTO {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public boolean isActiva() {
+        return activa;
+    }
+
+    public void setActiva(boolean activa) {
+        this.activa = activa;
     }
 
     public Long getUsuarioId() {

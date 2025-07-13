@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mis Reservas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+<div th:replace="fragments/header :: myHeader"></div>
+
+<div class="container mt-4">
+  <h2 class="mb-4">Mis Reservas</h2>
+
+  <table class="table table-bordered table-hover align-middle">
+    <thead class="table-light">
+    <tr>
+      <th>Nombre del Tour</th>
+      <th>Empresa</th>
+      <th>Idioma</th>
+      <th>Email Cliente</th>
+      <th>Fecha de Reserva</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="reserva : ${reservas}">
+      <td th:text="${reserva.tour.nombreTour}">Tour Nombre</td>
+      <td th:text="${reserva.tour.empresa.nombreEmpresa}">Empresa Nombre</td>
+      <td th:text="${reserva.tour.idioma}">Idioma</td>
+      <td th:text="${reserva.cliente.email}">cliente@mail.com</td>
+      <td th:text="${#temporals.format(reserva.fechaReserva, 'dd/MM/yyyy')}">01/01/2025</td>
+      <td>
+        <form th:action="@{'/cliente/reservas/' + ${reserva.id} + '/eliminar'}" method="post" onsubmit="return confirm('¿Seguro que quieres eliminar esta reserva?');">
+          <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+        </form>
+      </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(reservas)}">
+      <td colspan="5" class="text-center text-muted">No tenés reservas registradas.</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

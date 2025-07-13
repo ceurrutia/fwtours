@@ -1,8 +1,12 @@
 package com.fwtours.fwalkingtours.entities;
 
+import com.fwtours.fwalkingtours.enums.Idioma;
+import com.fwtours.fwalkingtours.enums.Rol;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 public class Tour {
@@ -15,11 +19,18 @@ public class Tour {
     private String puntoEncuentro;
     private String duracion;
     private LocalDate fecha;
+    private LocalTime hora;
+
+    @Enumerated(EnumType.STRING)
+    private Idioma idioma;
+
     private String ciudad;
     private String pais;
     private Double donacionSugerida;
 
-    @ManyToOne
+
+
+    @ManyToOne(fetch = FetchType.EAGER)
     private Empresa empresa;
 
     //constructores
@@ -30,7 +41,7 @@ public class Tour {
 
     public Tour(Long id, String nombreTour,
                 String descripcion, String puntoEncuentro, String duracion,
-                LocalDate fecha, String ciudad, String pais, Double donacionSugerida,
+                LocalDate fecha, LocalTime hora, Idioma idioma, String ciudad, String pais, Double donacionSugerida,
                 Empresa empresa) {
         this.id = id;
         this.nombreTour = nombreTour;
@@ -39,6 +50,8 @@ public class Tour {
         this.puntoEncuentro = puntoEncuentro;
         this.donacionSugerida = donacionSugerida;
         this.fecha = fecha;
+        this.hora = hora;
+        this.idioma = idioma;
         this.ciudad = ciudad;
         this.pais = pais;
         this.empresa = empresa;
@@ -101,6 +114,22 @@ public class Tour {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
+    }
+
+    public Idioma getIdioma() {
+        return idioma;
+    }
+
+    public void setIdioma(Idioma idioma) {
+        this.idioma = idioma;
     }
 
     public String getCiudad() {

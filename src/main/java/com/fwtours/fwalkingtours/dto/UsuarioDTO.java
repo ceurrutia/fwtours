@@ -7,6 +7,7 @@ public class UsuarioDTO {
 
     private Long id;
     private String email;
+    private String telefono;
     private Rol rol;
     private String nombreCompleto;
     private String username;
@@ -14,8 +15,7 @@ public class UsuarioDTO {
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(Long id, String email, Rol rol,
-                      String nombreCompleto, String username) {
+    public UsuarioDTO(Long id, String email, Rol rol, String nombreCompleto, String username) {
         this.id = id;
         this.email = email;
         this.rol = rol;
@@ -35,6 +35,14 @@ public class UsuarioDTO {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public void setEmail(String email) {
