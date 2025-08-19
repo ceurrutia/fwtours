@@ -1,8 +1,13 @@
 package com.fwtours.fwalkingtours;
 
+import com.fwtours.fwalkingtours.dto.UsuarioCreateDTO;
+import com.fwtours.fwalkingtours.enums.Rol;
+import com.fwtours.fwalkingtours.services.UsuarioService;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class FwalkingtoursApplication {
@@ -20,5 +25,25 @@ public class FwalkingtoursApplication {
 
 		SpringApplication.run(FwalkingtoursApplication.class, args);
 	}
+
+//	@Bean
+//	public CommandLineRunner init(UsuarioService usuarioService) {
+//		return args -> {
+//			String email = "admin60@fwtours.com";
+//			if (usuarioService.findByEmail(email).isEmpty()) {
+//				UsuarioCreateDTO dto = new UsuarioCreateDTO();
+//				dto.setEmail(email);
+//				dto.setPassword("adminSeguro123");
+//				dto.setRol(Rol.ADMIN);
+//				dto.setNombreCompleto("Super Admin");
+//				dto.setUsername("superadmin60");
+//
+//				usuarioService.crearUsuario(dto);
+//				System.out.println("Usuario SUPERADMIN creado: " + email + " / adminSeguro123");
+//			} else {
+//				System.out.println("ℹ Ya existe el SUPERADMIN. No se creó uno nuevo.");
+//			}
+//		};
+//	}
 
 }
